@@ -2,5 +2,6 @@ public interface ElementSet {
     String getName();
     int value();
     int cardinality();
-    ElementSet union(ElementSet b);
+    ElementSet createUnion(ElementSet b);
+    void union(ElementSet b);
 }

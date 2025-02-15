@@ -1,12 +1,14 @@
+import java.util.Arrays;
 import java.util.HashSet;
 
 public class HyperedgeSet implements ElementSet{
     String name;
     int cardinality;
-    HashSet<Integer> groundSet;
-    public HyperedgeSet(String name, HashSet<Integer> groundSet, int cardinality){
+    HashSet<String> groundSet;
+    public HyperedgeSet(String name, HashSet<String> groundSet, int cardinality){
         this.name = name;
         this.groundSet = groundSet;
+        this.cardinality = cardinality;
     }
     @Override
     public String getName() {
@@ -28,21 +30,26 @@ public class HyperedgeSet implements ElementSet{
     }
 
     @Override
-    public ElementSet union(ElementSet b) {
+    public ElementSet createUnion(ElementSet b) {
         if (b instanceof HyperedgeSet) {
-            HashSet<Integer> newGroundSet = new HashSet<>(groundSet);
+            HashSet<String> newGroundSet = new HashSet<>(groundSet);
             newGroundSet.addAll(((HyperedgeSet)b).groundSet);
             return new HyperedgeSet(getName().concat("+").concat(b.getName()), newGroundSet, cardinality + b.cardinality());
         }
         else throw new ClassCastException("Union of two different implementations of ElementSet.");
     }
+    public void union(ElementSet b) {
+        if (b instanceof HyperedgeSet) {
+            groundSet.addAll(((HyperedgeSet)b).groundSet);
+            name = name.concat("+").concat(b.getName());
+            cardinality += b.cardinality();
+        }
+        else throw new ClassCastException("Union of two different implementations of ElementSet.");
+    }
     public static ElementSet readHyperedge(String hyperedge, int i){
         if (hyperedge.startsWith("%")) return null;
-        HashSet<Integer> groundSet = new HashSet<>();
         String[] parts = hyperedge.split(" ");
-        for (String part : parts) {
-            groundSet.add(Integer.parseInt(part));
-        }
+        HashSet<String> groundSet = new HashSet<>(Arrays.asList(parts));
         return new HyperedgeSet(String.valueOf(i), groundSet, 1);
     }
 }

@@ -3,7 +3,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.LinkedList;
 
-public class Algorithm {
+public class Streaming {
     private final String functionType;
     private int firstB;
     private int lastB;
@@ -12,17 +12,17 @@ public class Algorithm {
     private int maxValue;
     private final double epsilon;
     private final String fileName;
-    public Algorithm(String functionType, String fileName, double epsilon, int k){
+    public Streaming(String functionType, String fileName, double epsilon, int k){
         this.functionType = functionType;
         this.k = k;
         this.epsilon = epsilon;
         this.fileName = fileName;
         maxValue = 0;
-        phi = null;
+        phi = new LinkedList<>();
         firstB = Integer.MIN_VALUE;
         lastB = Integer.MIN_VALUE;
     }
-    public void stream() {
+    public ElementSet stream() {
         try (BufferedReader br = new BufferedReader(new FileReader(fileName))) {
             int i = 0;
             for (String line; (line = br.readLine()) != null; ) {
@@ -33,6 +33,7 @@ public class Algorithm {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+        return bestCollection();
     }
     public void processElement(ElementSet e){
         if (e.value() > maxValue) {
@@ -43,8 +44,10 @@ public class Algorithm {
                 for (int i = newFirst; i <= newLast; i++) phi.add(SubmodularFunction.emptySet(functionType));
             }
             else {
-                for (int i = 0; i < newFirst - firstB; i++) phi.removeFirst();
-                for (int i = 0; i < lastB - newLast; i++) phi.add(SubmodularFunction.emptySet(functionType));
+                for (int i = 0; i < newFirst - firstB; i++) {
+                    if (!phi.isEmpty()) phi.removeFirst(); else break;
+                }
+                for (int i = 0; i < newLast - lastB; i++) phi.add(SubmodularFunction.emptySet(functionType));
             }
             firstB = newFirst;
             lastB = newLast;
@@ -58,7 +61,15 @@ public class Algorithm {
         }
     }
     public int marginalContribution(ElementSet element, ElementSet set){
-        return element.union(set).value() - set.value();
+        return element.createUnion(set).value() - set.value();
     }
-
+    private ElementSet bestCollection(){
+        ElementSet bestSet = SubmodularFunction.emptySet(functionType);
+        for (ElementSet phiI : phi){
+            if (phiI.value() > bestSet.value()) {
+                bestSet = phiI;
+            }
+        }
+        return bestSet;
+    }
 }
