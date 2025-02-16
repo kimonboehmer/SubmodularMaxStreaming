@@ -8,15 +8,15 @@ public class Streaming {
     private int firstB;
     private int lastB;
     private final int k;
-    private LinkedList<ElementSet> phi;
+    private final LinkedList<ElementSet> phi;
     private int maxValue;
     private final double epsilon;
     private final String fileName;
-    public Streaming(String functionType, String fileName, double epsilon, int k){
-        this.functionType = functionType;
-        this.k = k;
+    public Streaming(Instance inst, double epsilon){
+        this.functionType = inst.functionType();
+        this.k = inst.k();
         this.epsilon = epsilon;
-        this.fileName = fileName;
+        this.fileName = inst.fileName();
         maxValue = 0;
         phi = new LinkedList<>();
         firstB = Integer.MIN_VALUE;
@@ -54,14 +54,11 @@ public class Streaming {
         }
         int i = firstB;
         for (ElementSet phiI : phi){
-            if (phiI.cardinality() < k && marginalContribution(e, phiI) >= ((Math.pow(1 + epsilon, i) / 2 ) - phiI.value()) / (k - phiI.cardinality())){
+            if (phiI.cardinality() < k && HelperFunctions.marginalContribution(e, phiI) >= ((Math.pow(1 + epsilon, i) / 2 ) - phiI.value()) / (k - phiI.cardinality())){
                 phiI.union(e);
             }
             i++;
         }
-    }
-    public int marginalContribution(ElementSet element, ElementSet set){
-        return element.createUnion(set).value() - set.value();
     }
     private ElementSet bestCollection(){
         ElementSet bestSet = SubmodularFunction.emptySet(functionType);
