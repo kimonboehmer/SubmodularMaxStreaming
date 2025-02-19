@@ -7,7 +7,10 @@ public class Approx {
     ElementSet[] elements;
     String type;
     int k;
+    int memory;
+    int time;
     public Approx(Instance instance) {
+        long startTime = System.currentTimeMillis();
         LinkedList<ElementSet> elementsList = new LinkedList<>();
         try (BufferedReader br = new BufferedReader(new FileReader(instance.fileName()))) {
             int i = 0;
@@ -23,25 +26,37 @@ public class Approx {
         elements = elementsList.toArray(elements);
         this.type = instance.functionType();
         this.k = instance.k();
+        this.memory = memSize();
+        time = (int) ((int) System.currentTimeMillis() - startTime);
     }
     public ElementSet run(){
+        long startTime = System.currentTimeMillis();
         ElementSet currentSet = SubmodularFunction.emptySet(type);
         for (int i = 0; i < k; i++){
             int best = findMax(currentSet);
             currentSet.union(elements[best]);
         }
+        memory += currentSet.value();
+        time += (int) (System.currentTimeMillis() - startTime);
         return currentSet;
     }
     private int findMax(ElementSet currentSet) {
         int best = 0;
-        int val = HelperFunctions.marginalContribution(elements[0], currentSet);
+        int val = currentSet.marginalContribution(elements[0]);
         for (int i = 1; i < elements.length; i++) {
-            int thisVal = HelperFunctions.marginalContribution(elements[i], currentSet);
+            int thisVal = currentSet.marginalContribution(elements[i]);
             if (thisVal > val) {
                 val = thisVal;
                 best = i;
             }
         }
         return best;
+    }
+    private int memSize() {
+        int size = 0;
+        for (ElementSet set : elements) {
+            size += set.value();
+        }
+        return size;
     }
 }

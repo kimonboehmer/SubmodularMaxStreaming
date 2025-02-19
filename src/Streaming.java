@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.util.LinkedList;
 
 public class Streaming {
+    int memory;
+    int time;
     private final String functionType;
     private int firstB;
     private int lastB;
@@ -22,17 +24,21 @@ public class Streaming {
         firstB = Integer.MIN_VALUE;
         lastB = Integer.MIN_VALUE;
     }
-    public ElementSet stream() {
+    public ElementSet run() {
+        long startTime = System.currentTimeMillis();
         try (BufferedReader br = new BufferedReader(new FileReader(fileName))) {
             int i = 0;
             for (String line; (line = br.readLine()) != null; ) {
                 ElementSet es = HyperedgeSet.readHyperedge(line, i++);
                 if (es == null) continue;
                 processElement(es);
+                int currentMemory = memSize();
+                if (currentMemory > memory) memory = currentMemory;
             }
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+        time = (int) (System.currentTimeMillis() - startTime);
         return bestCollection();
     }
     public void processElement(ElementSet e){
@@ -54,7 +60,7 @@ public class Streaming {
         }
         int i = firstB;
         for (ElementSet phiI : phi){
-            if (phiI.cardinality() < k && HelperFunctions.marginalContribution(e, phiI) >= ((Math.pow(1 + epsilon, i) / 2 ) - phiI.value()) / (k - phiI.cardinality())){
+            if (phiI.cardinality() < k && phiI.marginalContribution(e) >= ((Math.pow(1 + epsilon, i) / 2 ) - phiI.value()) / (k - phiI.cardinality())){
                 phiI.union(e);
             }
             i++;
@@ -68,5 +74,12 @@ public class Streaming {
             }
         }
         return bestSet;
+    }
+    private int memSize(){
+        int count = 0;
+        for (ElementSet phiI : phi){
+            count += phiI.value();
+        }
+        return count;
     }
 }

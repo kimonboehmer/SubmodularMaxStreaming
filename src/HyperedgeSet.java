@@ -25,6 +25,13 @@ public class HyperedgeSet implements ElementSet{
         return cardinality;
     }
 
+    @Override
+    public int marginalContribution(ElementSet element) {
+        int count = 0;
+        for (String s : ((HyperedgeSet)element).groundSet) if (!groundSet.contains(s)) count++;
+        return count;
+    }
+
     public static ElementSet emptySet() {
         return new HyperedgeSet("", new HashSet<>(), 0);
     }
