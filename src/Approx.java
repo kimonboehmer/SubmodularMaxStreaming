@@ -4,25 +4,25 @@ import java.io.IOException;
 import java.util.LinkedList;
 
 public class Approx {
-    ElementSet[] elements;
+    Element[] elements;
     String type;
     int k;
     int memory;
     int time;
     public Approx(Instance instance) {
         long startTime = System.currentTimeMillis();
-        LinkedList<ElementSet> elementsList = new LinkedList<>();
+        LinkedList<Element> elementsList = new LinkedList<>();
         try (BufferedReader br = new BufferedReader(new FileReader(instance.fileName()))) {
             int i = 0;
             for (String line; (line = br.readLine()) != null; ) {
-                ElementSet es = HyperedgeSet.readHyperedge(line, i++);
+                Element es = SubmodularFunction.readElement(instance.functionType(), line, i++);
                 if (es == null) continue;
                 elementsList.add(es);
             }
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        elements = new ElementSet[elementsList.size()];
+        elements = new Element[elementsList.size()];
         elements = elementsList.toArray(elements);
         this.type = instance.functionType();
         this.k = instance.k();

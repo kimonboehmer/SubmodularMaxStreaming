@@ -29,7 +29,7 @@ public class Streaming {
         try (BufferedReader br = new BufferedReader(new FileReader(fileName))) {
             int i = 0;
             for (String line; (line = br.readLine()) != null; ) {
-                ElementSet es = HyperedgeSet.readHyperedge(line, i++);
+                Element es = SubmodularFunction.readElement(functionType, line, i++);
                 if (es == null) continue;
                 processElement(es);
                 int currentMemory = memSize();
@@ -41,7 +41,7 @@ public class Streaming {
         time = (int) (System.currentTimeMillis() - startTime);
         return bestCollection();
     }
-    public void processElement(ElementSet e){
+    public void processElement(Element e){
         if (e.value() > maxValue) {
             maxValue = e.value();
             int newFirst = (int) Math.ceil(Math.log(maxValue) / Math.log(1 + epsilon));

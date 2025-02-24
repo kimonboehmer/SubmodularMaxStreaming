@@ -26,9 +26,9 @@ public class HyperedgeSet implements ElementSet{
     }
 
     @Override
-    public int marginalContribution(ElementSet element) {
+    public int marginalContribution(Element element) {
         int count = 0;
-        for (String s : ((HyperedgeSet)element).groundSet) if (!groundSet.contains(s)) count++;
+        for (String s : ((Hyperedge)element).groundSet) if (!groundSet.contains(s)) count++;
         return count;
     }
 
@@ -53,10 +53,10 @@ public class HyperedgeSet implements ElementSet{
         }
         else throw new ClassCastException("Union of two different implementations of ElementSet.");
     }
-    public static ElementSet readHyperedge(String hyperedge, int i){
+    public static Hyperedge readHyperedge(String hyperedge, int i){
         if (hyperedge.startsWith("%")) return null;
         String[] parts = hyperedge.split(" ");
         HashSet<String> groundSet = new HashSet<>(Arrays.asList(parts));
-        return new HyperedgeSet(String.valueOf(i), groundSet, 1);
+        return new Hyperedge(String.valueOf(i), groundSet, 1);
     }
 }
