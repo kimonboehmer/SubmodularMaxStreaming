@@ -1,3 +1,5 @@
+package datastructures;
+
 /**
  * Interface for a set X of elements in the domain of a submodular function.
  */

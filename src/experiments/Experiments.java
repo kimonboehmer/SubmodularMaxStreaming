@@ -1,8 +1,13 @@
+package experiments;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.LinkedList;
+
+import datastructures.ElementSet;
+import datastructures.Instance;
+import algorithms.*;
 
 public class Experiments {
     private static File[] listFiles(String directory){
@@ -15,7 +20,7 @@ public class Experiments {
      * @throws IOException in case there is a read/write error.
      */
     public static void mainExperiment(String directory) throws IOException {
-        final String FUNCTION_TYPE = "Hyperedge"; // structure type of the input
+        final String FUNCTION_TYPE = "datastructures.Hyperedge"; // structure type of the input
         final String OUTPUT_FILE = "results.csv"; // file to which the results will be written
         final double[] EPSILON_VALUES = new double[]{1,0.5,0.1,0.05,0.01,0.005}; // all considered epsilon-values for the streaming algorithm
         final int[] K_VALUES = new int[]{10,20,50,100,200}; // all considered values for k

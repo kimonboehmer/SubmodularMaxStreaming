@@ -1,1 +1,1 @@
-Implementation of a Streaming Algorithm for Submodular Function Maximization with Cardinality Constraint
+Implementation of a algorithms.Streaming Algorithm for Submodular Function Maximization with Cardinality Constraint

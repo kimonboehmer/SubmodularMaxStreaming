@@ -1,3 +1,10 @@
+package algorithms;
+
+import datastructures.Element;
+import datastructures.ElementSet;
+import datastructures.Instance;
+import datastructures.SubmodularFunction;
+
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
@@ -7,8 +14,8 @@ import java.util.LinkedList;
  * Implementation of the streaming algorithm with a (0.5-epsilon)-approximation guarantee
  */
 public class Streaming {
-    int memory;
-    int time;
+    public int memory;
+    public int time;
     private final String functionType;
     private int firstB;
     private int lastB;
@@ -30,7 +37,7 @@ public class Streaming {
 
     /**
      * runs the streaming algorithm, while keeping track of time and memory.
-     * @return an ElementSet which represents the solution of the algorithm.
+     * @return an datastructures.ElementSet which represents the solution of the algorithm.
      */
     public ElementSet run() {
         long startTime = System.currentTimeMillis();
@@ -76,7 +83,7 @@ public class Streaming {
     }
 
     /**
-     * @return the best ElementSet among all ElementSets in phi.
+     * @return the best datastructures.ElementSet among all ElementSets in phi.
      */
     private ElementSet bestCollection(){
         ElementSet bestSet = SubmodularFunction.emptySet(functionType);

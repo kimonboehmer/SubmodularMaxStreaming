@@ -1,3 +1,5 @@
+package algorithms;
+import datastructures.*;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
@@ -10,8 +12,8 @@ public class Approx {
     Element[] elements;
     String type;
     int k;
-    int memory;
-    int time;
+    public int memory;
+    public int time;
     public Approx(Instance instance) {
         long startTime = System.currentTimeMillis();
         LinkedList<Element> elementsList = new LinkedList<>();
@@ -34,7 +36,7 @@ public class Approx {
     }
 
     /**
-     * @return an ElementSet which represents the solution of the algorithm.
+     * @return an datastructures.ElementSet which represents the solution of the algorithm.
      */
     public ElementSet run(){
         long startTime = System.currentTimeMillis();

@@ -1,3 +1,5 @@
+package datastructures;
+
 import java.util.Arrays;
 import java.util.HashSet;
 
@@ -43,7 +45,7 @@ public class HyperedgeSet implements ElementSet{
             name = name.concat("+").concat(b.getName()); // arbitrary naming convention
             cardinality += b.cardinality(); // number of hyperedges in the set is simple sum
         }
-        else throw new ClassCastException("Union of two different implementations of ElementSet.");
+        else throw new ClassCastException("Union of two different implementations of datastructures.ElementSet.");
     }
     public static Hyperedge readHyperedge(String hyperedge, int i){
         if (hyperedge.startsWith("%")) return null; // comment line

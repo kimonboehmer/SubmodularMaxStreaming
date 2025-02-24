@@ -1,3 +1,4 @@
+package datastructures;
 
 public class Facility extends FacilitySet implements Element{
     public Facility(String name, int[] weights, int cardinality) {
