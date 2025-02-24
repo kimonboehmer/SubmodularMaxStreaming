@@ -1,5 +1,4 @@
 import java.util.Arrays;
-import java.util.HashSet;
 
 public class FacilitySet implements ElementSet{
     String name;
@@ -26,24 +25,15 @@ public class FacilitySet implements ElementSet{
     public int marginalContribution(Element element) {
         int sum = 0;
         FacilitySet f = (FacilitySet) element;
-        for (int i = 0; i < weights.length; i++) sum += Math.max(0, f.weights[i] - weights[i]);
+        for (int i = 0; i < weights.length; i++) sum += Math.max(0, f.weights[i] - weights[i]); // element only helps if the weight is better than the max until now
         return sum;
-    }
-
-    @Override
-    public ElementSet createUnion(ElementSet b) {
-        FacilitySet f = (FacilitySet)b;
-        int[] newWeights = new int[f.weights.length];
-        for (int i = 0; i < weights.length; i++) {
-            newWeights[i] = Math.max(f.weights[i], weights[i]);
-        }
-        return new FacilitySet(name + "+" + f.name, newWeights, cardinality + f.cardinality);
     }
 
     @Override
     public void union(ElementSet b) {
         FacilitySet f = (FacilitySet)b;
-        for (int i = 0; i < weights.length; i++){
+        if (weights.length == 0) weights = new int[f.weights.length]; // update the weight array size in case we had an empty set
+        for (int i = 0; i < weights.length; i++){ // find the max weight for each ground element
             if (f.weights[i] > weights[i]) weights[i] = f.weights[i];
         }
 
@@ -54,12 +44,17 @@ public class FacilitySet implements ElementSet{
         this.cardinality = cardinality;
     }
     public static Facility readFacility(String weightString, int i){
-        if (weightString.startsWith("%")) return null;
+        if (weightString.startsWith("%")) return null; // comment line
         String[] weights = weightString.split(" ");
         return new Facility(String.valueOf(i),Arrays.stream(weights).mapToInt(Integer::parseInt).toArray(), 1);
     }
+
+    /**
+     * @return an empty set. The size of the weight array cannot be known in advance,
+     * but this is not an issue since it will be corrected with the arrival of the first facility.
+     */
     public static ElementSet emptySet() {
-        return new FacilitySet("", new int[10], 0);
+        return new FacilitySet("", new int[0], 0);
     }
 
 }

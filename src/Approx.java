@@ -3,6 +3,9 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.LinkedList;
 
+/**
+ * Implementation of the classical (1-1/e)-approximation
+ */
 public class Approx {
     Element[] elements;
     String type;
@@ -23,23 +26,32 @@ public class Approx {
             throw new RuntimeException(e);
         }
         elements = new Element[elementsList.size()];
-        elements = elementsList.toArray(elements);
+        elements = elementsList.toArray(elements); // store all elements in an array
         this.type = instance.functionType();
         this.k = instance.k();
         this.memory = memSize();
         time = (int) ((int) System.currentTimeMillis() - startTime);
     }
+
+    /**
+     * @return an ElementSet which represents the solution of the algorithm.
+     */
     public ElementSet run(){
         long startTime = System.currentTimeMillis();
-        ElementSet currentSet = SubmodularFunction.emptySet(type);
+        ElementSet currentSet = SubmodularFunction.emptySet(type); // start with the empty solution
         for (int i = 0; i < k; i++){
             int best = findMax(currentSet);
-            currentSet.union(elements[best]);
+            currentSet.union(elements[best]); // add new element with max marginal contribution
         }
         memory += currentSet.value();
         time += (int) (System.currentTimeMillis() - startTime);
         return currentSet;
     }
+
+    /**
+     * @param currentSet current set X
+     * @return max over e : f(X+e)-f(X)
+     */
     private int findMax(ElementSet currentSet) {
         int best = 0;
         int val = currentSet.marginalContribution(elements[0]);

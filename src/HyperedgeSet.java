@@ -28,7 +28,7 @@ public class HyperedgeSet implements ElementSet{
     @Override
     public int marginalContribution(Element element) {
         int count = 0;
-        for (String s : ((Hyperedge)element).groundSet) if (!groundSet.contains(s)) count++;
+        for (String s : ((Hyperedge)element).groundSet) if (!groundSet.contains(s)) count++; // element only contributes if s was  not in the groundSet already
         return count;
     }
 
@@ -37,24 +37,16 @@ public class HyperedgeSet implements ElementSet{
     }
 
     @Override
-    public ElementSet createUnion(ElementSet b) {
-        if (b instanceof HyperedgeSet) {
-            HashSet<String> newGroundSet = new HashSet<>(groundSet);
-            newGroundSet.addAll(((HyperedgeSet)b).groundSet);
-            return new HyperedgeSet(getName().concat("+").concat(b.getName()), newGroundSet, cardinality + b.cardinality());
-        }
-        else throw new ClassCastException("Union of two different implementations of ElementSet.");
-    }
     public void union(ElementSet b) {
         if (b instanceof HyperedgeSet) {
             groundSet.addAll(((HyperedgeSet)b).groundSet);
-            name = name.concat("+").concat(b.getName());
-            cardinality += b.cardinality();
+            name = name.concat("+").concat(b.getName()); // arbitrary naming convention
+            cardinality += b.cardinality(); // number of hyperedges in the set is simple sum
         }
         else throw new ClassCastException("Union of two different implementations of ElementSet.");
     }
     public static Hyperedge readHyperedge(String hyperedge, int i){
-        if (hyperedge.startsWith("%")) return null;
+        if (hyperedge.startsWith("%")) return null; // comment line
         String[] parts = hyperedge.split(" ");
         HashSet<String> groundSet = new HashSet<>(Arrays.asList(parts));
         return new Hyperedge(String.valueOf(i), groundSet, 1);
